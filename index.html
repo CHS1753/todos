@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo list</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+    * {margin: 0; padding: 0; box-sizing: border-box;}
+    #app {width: 1000px; margin: 0 auto;}
+    header {text-align: center; height: 100px; line-height: 100px; width: 900px; font-size: 2.5em; word-spacing: 1em; letter-spacing: 1em;}
+    footer {text-align: center; height: 100px; line-height: 100px; width: 900px; font-size: 0.5em;}
+    nav>ul {overflow: hidden; border: 2px solid darkgray; }
+    nav>ul>li {float: left; width: 100px; height: 80px; line-height: 80px; list-style:none;}
+    nav>ul>li>a {color: black; text-decoration: none; display: block; text-align: center; width: 100px; color: white; }
+    nav>ul>li>a:hover {background-color:darkgrey; font-weight: 700; }
+    #mn {overflow: hidden;}
+    section {float: left; width: 800px; min-height: 700px;}
+    aside {float: left; width: 100px; height: 700px; line-height: 300px; text-align: center;  color: black;}
+    #important {width: 400px; float: left; text-align: center;}
+    #tododate {width: 400px; float: left; text-align: center; }
+    #todolist {text-align: center;}
+    .finish {color: red; text-decoration: line-through;}
+
+  </style>
+
+</head>
+<body>
+  <div id="app">
+    <div  class="container p-4 my-0 bg-white text-dark">
+      <header>ToDo List</header>
+    </div>
+    <div  class="container p-1 my-0 bg-dark text-white">
+      <nav>
+        <ul>
+          <li><a href="https://www.naver.com/">naver</a></li>
+          <li><a href="https://www.google.com/">google</a></li>
+          <li><a href="https://namu.wiki/">namuwiki</a></li>
+        </ul>
+      </nav>
+    </div>
+    <main id="mn">
+      <aside></aside>
+      <section>
+        <div>
+          <div id="appdata" class="input-group mb-3 mt-0">
+           <span class="input-group-text">내용</span>
+            <input type="text" id="todo" class="form-control">
+            <button onclick="ADD()" type="submit" class="btn btn-primary btn btn-success" >추가</button>
+          </div>
+          <div>
+            <input type="date" id="tododate" class="form-control mb-4">
+          </div>
+          <div>
+          </div>
+          <div>
+            <select id="important" class="form-select mb-4">
+              <option disabled selected value="0">선 택</option>
+              <option>평범</option>
+              <option>중요</option>
+              <option>매우 중요</option>
+            </select>
+          </div>
+          <div>
+            <table id="todolist" class="table table-dark table-hover">
+              <thead>
+                <tr>
+                  <th>날짜</th>
+                  <th>중요도</th>
+                  <th>내용</th>
+                  <th>삭제</th>
+                </tr>
+              </thead>
+              <tbody id="tbody"></tbody>
+            </table>
+          </div>
+        </section>
+        <aside></aside>
+      </main>
+      <footer> cheahs3063&#64;gmail.com </footer>
+    </div>
+  
+  <script>
+    let todos = [];
+    let number = 1;
+    const $todo = document.getElementById('todo');
+    const $tododate = document.getElementById('tododate');
+    const $important = document.getElementById('important');
+    const $todolist = document.getElementById('todolist');
+    const $tbody = document.getElementById('tbody');
+  
+    function ADD() {
+      const Todo = $todo.value;
+      const Tododate = $tododate.value;
+      const Important = $important.value;
+      if (Todo==='' || Important===0 || Tododate==="") {
+        return;
+      }
+      const list = {num:number, Tododate, Important, Todo, finish:false};
+      todos.push(list);
+      $todo.value = "";
+      $tododate.value = "";
+      $important.value = "";
+      $todo.focus()
+      $push();
+    }
+    function $push() {
+      let html = ""
+      for(const $todos of todos) {
+        html += `<tr >
+          <td onclick="change(${$todos.num})" class=${$todos.finish===false? "":"finish" }>${$todos.Tododate} ${$todos.finish===false? "":"(완료)"}</td>
+          <td onclick="change(${$todos.num})" class=${$todos.finish===false? "":"finish" }>${$todos.Important}</td>
+          <td onclick="change(${$todos.num})" class=${$todos.finish===false? "":"finish" }>${$todos.Todo}</td>
+          <td><button onclick="del(${$todos.num})" class="btn btn-danger">지우기</button></td>
+          </tr>`
+      }
+      $tbody.innerHTML=html;
+    }
+    function del(num) {
+      for(let i=0; i<todos.length; ++i) {
+        if (todos[i].num===num) {
+          todos.splice(i,1);
+          break;
+        }
+      }
+      $push();
+    }
+    function change(num) {
+      for (const Todos of todos) {
+        if (Todos.num===num) {
+          Todos.finish =!Todos.finish;
+          break;
+        }
+      }
+      $push();
+    }
+
+
+  </script>
+</body>
+</html>
